@@ -1,0 +1,119 @@
+:root {
+  --dark-bg: #323238;
+  --accent-purple: #9d7dfa;
+  --text-white: #ffffff;
+  --text-gray: #a0a0a0;
+}
+
+.main-wrapper {
+  background-color: var(--dark-bg) ; 
+  min-height: 100vh;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.portfolio-card {
+  background-color: var(--dark-bg);
+  width: 100%;
+  min-height: 100vh;
+  border-radius: 0;
+  padding: 40px 80px;
+  box-sizing: border-box;
+  box-shadow: none;
+}
+
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 100px;
+}
+
+.nav-links a {
+  color: var(--text-white);
+  text-decoration: none;
+  margin-right: 24px;
+  font-weight: 500;
+  font-size: 0.9rem;
+}
+
+.nav-avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  border: 2px solid var(--accent-purple);
+  object-fit: cover;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+}
+
+.overline {
+  color: var(--accent-purple);
+  font-size: 0.75rem;
+  letter-spacing: 2px;
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+
+h1 {
+  font-size: 4.5rem;
+  line-height: 1.05;
+  margin: 0 0 1.5rem 0;
+  font-weight: 600;
+  max-width: 800px;
+}
+
+.description {
+  font-size: 1.1rem;
+  color: var(--text-gray);
+  max-width: 500px;
+  line-height: 1.6;
+  margin-bottom: 2.5rem;
+}
+
+.primary-btn {
+  background: linear-gradient(90deg, #a78bfa, #f472b6);
+  border: none;
+  padding: 12px 24px;
+  border-radius: 50px;
+  color: white;
+  font-weight: 600;
+  margin-right: 15px;
+  cursor: pointer;
+}
+
+.secondary-btn {
+  background: #27272a;
+  border: 1px solid #3f3f46;
+  color: white;
+  padding: 12px 24px;
+  border-radius: 50px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.social-links {
+  display: flex;
+  gap: 15px;
+  margin-top: 38px;
+  flex-wrap: wrap;
+}
+
+.social-links a {
+  text-decoration: none;
+  font-size: 0.9rem;
+  font-weight:600;
+  padding: 8px 16px;
+  border-radius: 8px;
+  background: var(--surface-alt);
+  border: 1px solid var(--border);
+  transition: all 0.3s ease;
+}
+
+.social-links a:hover {
+  background: var(--accent);
+  color: white;
+ transform: translateY(-2px);
+}

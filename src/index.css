@@ -1,0 +1,112 @@
+:root {
+  --text: #5a5466;
+  --text-h: #0e0c14;
+  --bg: #f4efe6;
+  --surface: rgba(255, 250, 243, 0.92);
+  --surface-alt: rgba(255, 255, 255, 0.72);
+  --panel: rgba(255, 255, 255, 0.66);
+  --border: rgba(50, 34, 72, 0.12);
+  --code-bg: #f4ede4;
+  --accent: #7b35ff;
+  --accent-2: #ff7a59;
+  --accent-soft: rgba(123, 53, 255, 0.14);
+  --accent-strong: #5a22d6;
+  --shadow:
+    rgba(36, 21, 58, 0.12) 0 28px 60px -24px,
+    rgba(36, 21, 58, 0.08) 0 12px 24px -18px;
+
+  --sans: 'Manrope', 'Avenir Next', 'Segoe UI', sans-serif;
+  --heading: 'Fraunces', 'Iowan Old Style', 'Palatino Linotype', serif;
+  --mono: 'SFMono-Regular', Consolas, 'Liberation Mono', monospace;
+
+  font: 17px/1.6 var(--sans);
+  letter-spacing: 0.01em;
+  color-scheme: light;
+  color: var(--text);
+  background:
+    radial-gradient(circle at top left, rgba(123, 53, 255, 0.18), transparent 28%),
+    radial-gradient(circle at top right, rgba(255, 122, 89, 0.16), transparent 26%),
+    linear-gradient(180deg, #faf6ef 0%, #f4efe6 45%, #efe7db 100%);
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+  font-optical-sizing: auto;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --text: #b9b0c7;
+    --text-h: #f8f4ff;
+    --bg: #120f19;
+    --surface: rgba(22, 19, 31, 0.9);
+    --surface-alt: rgba(31, 27, 41, 0.82);
+    --panel: rgba(19, 16, 28, 0.78);
+    --border: rgba(245, 232, 255, 0.1);
+    --code-bg: #1d1827;
+    --accent: #9f72ff;
+    --accent-2: #ff8f6d;
+    --accent-soft: rgba(159, 114, 255, 0.16);
+    --accent-strong: #c1a2ff;
+    --shadow:
+      rgba(0, 0, 0, 0.42) 0 26px 58px -26px,
+      rgba(0, 0, 0, 0.28) 0 12px 24px -18px;
+  }
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+}
+
+#root {
+  min-height: 100svh;
+}
+
+h1,
+h2 {
+  font-family: var(--heading);
+  font-weight: 700;
+  color: var(--text-h);
+}
+
+h1 {
+  letter-spacing: -0.06em;
+}
+
+h2 {
+  letter-spacing: -0.04em;
+}
+
+h3 {
+  font-family: var(--sans);
+}
+
+p {
+  margin: 0;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+code {
+  font-family: var(--mono);
+  font-size: 0.95em;
+  line-height: 1.35;
+  padding: 4px 8px;
+  border-radius: 8px;
+  background: var(--code-bg);
+  color: var(--text-h);
+}
+
+a {
+  color: inherit;
+}
