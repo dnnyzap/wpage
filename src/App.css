@@ -1,17 +1,19 @@
 :root {
   --accent-purple: #9d7dfa;
+  --accent-orange: #ff7a59;
   --text-white: #ffffff;
   --text-gray: #a0a0a0;
+  --bg-dark: #1a0f0f;
 }
 
 .main-wrapper {
   min-height: 100vh;
   width: 100%;
   display: flex;
-  justify-content: center;
-  background-color: #1a0f0f;
+  justify-content: center; 
+  align-items: center;     
   position: relative;
-  overflow: hidden;
+  background-color: var(--bg-dark);
   padding: 40px 20px;
 }
 
@@ -22,200 +24,88 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
-  opacity: 0.2;
+  opacity: 0.25; 
   z-index: 1;
   pointer-events: none;
 }
-
-/*.portfolio-container {
-  display: flex;
-  min-height: 100vh;
-  width: 100%;
-  background-color: #ffffff;
-}
-*/
 
 .portfolio-card {
   position: relative;
   z-index: 2;
-  background: rgba(35, 20, 20, 0.9);
-  border: 1px solid rgba(255, 122, 89, 0.3);
-  border-radius: 24px;
-  padding: 40px;
-  max-width: 650px;
   width: 100%;
-  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.6);
+  max-width: 650px;
+  background: rgba(30, 20, 20, 0.92);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 122, 89, 0.25);
+  border-radius: 24px;
+  padding: 45px;
   text-align: center;
-} 
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.6);
+}
 
 .profile-avatar {
-  width: 110px;
-  height: 110px;
+  width: 120px;
+  height: 120px;
   border-radius: 50%;
-  border: 3px solid var(--accent);
+  border: 3px solid var(--accent-orange); 
   margin-bottom: 20px;
+  object-fit: cover;
 }
 
 .highlight {
-  color: #ff7a59;
-}
-
-
-
-.bio-section p {
-  color: #f4efe6;
-  line-height: 1.8;
-  margin-bottom: 15px;
-  font-size: 1.05rem;
-}
-
-.bg-illustration { 
-  position: absolute;
-  right: -50px;
-  bottom: 0;
-  opacity: 0.3;
-  width: 500px;
-  z-index: 1;
-  pointer-events: none;
-}
-
-.avatar-container {
-  position: relative;
-  display: inline-block;
+  color: var(--accent-orange);
 }
 
 .discord-status-dot {
   position: absolute;
-  bottom: 25px;
-  right: 10px;
-  width: 20px;
-  height: 20px;
-  background: #23a559;
-  border: 4px solid #2d1e1e;
+  bottom: 30px;
+  right: 12px;
+  width: 22px;
+  height: 22px;
+  background: #23a559; 
+  border: 4px solid #1e1414; 
   border-radius: 50%;
 }
 
 .discord-presence img {
-  margin-top: 10px;
-  max-width: 300px;
-  border-radius: 8px;
-  border: 1px solid rgba(255 , 255, 255, 0.1);
+  margin: 15px auto;
+  max-width: 350px;
+  width: 100%;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .social-links {
   display: flex;
-  justify-content: center;
-  gap: 15px;
-  margin-top: 30px;
-  
+  justify-content: center; 
+  gap: 12px;               
+  margin-top: 25px;
 }
 
 .social-links a {
-  padding: 10px 20px;
   background: rgba(255, 255, 255, 0.05);
   border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 8px;
+  padding: 10px 18px;
+  border-radius: 12px;
   text-decoration: none;
   color: #f4efe6;
   font-size: 0.9rem;
-  transition: 0.3s;
+  transition: all 0.2s ease;
 }
 
 .social-links a:hover {
- border-color: #1a3377;
-  background: var(--accent);
+  background: rgba(157, 125, 250, 0.2); 
+  border-color: #9d7dfa;
+  transform: translateY(-2px);
 }
 
-/*
-.content-side {
-  flex: 1; 
-  background-color: #120f19;
-  color: #ffffff;
-  display: flex;
-  flex-direction: column;
-  padding: 40px 60px;
-  justify-content: space-between;
-}
+.bio-section {
+  margin-top: 30px;
+  text-align: left; 
 
-
-.image-side {
-  flex: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background-color: #ffffff;
-}
-
-.main-illustration { 
-  max-width: 80%;
-  height: auto;
-  object-fit: contain;
-}
-.navbar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 100px;
-}
-
-.nav-links a {
-  color: var(--text-white);
-  text-decoration: none;
-  margin-right: 24px;
-  font-weight: 500;
-  font-size: 0.9rem;
-}
-
-.nav-avatar {
-  width: 48px;
-  height: 48px;
-  border-radius: 50%;
-  border: 2px solid var(--accent-purple);
-  object-fit: cover;
-  cursor: pointer;
-  transition: transform 0.3s ease;
-}
-
-.overline {
-  color: var(--accent-purple);
-  font-size: 0.75rem;
-  letter-spacing: 2px;
-  font-weight: 600;
-  margin-bottom: 1rem;
-}
-
-h1 {
-  font-size: 5.5rem;
-  margin: 10px 0;
-  line-height: 1;
-}
-
-.description {
-  color: #b9b0c7;
-  max-width: 450px;
-  font-size: 1.1rem;
-  line-height: 1.6;
-  margin-bottom: 2rem;
-}
-
-.primary-btn {
-  background: linear-gradient(90deg, #a78bfa, #f472b6);
-  border: none;
-  padding: 12px 24px;
-  border-radius: 50px;
-  color: white;
-  font-weight: 600;
-  margin-right: 15px;
-  cursor: pointer;
-}
-
-.secondary-btn {
-  background: #27272a;
-  border: 1px solid #3f3f46;
-  color: white;
-  padding: 12px 24px;
-  border-radius: 50px;
-  font-weight: 600;
-  cursor: pointer;
-}
-*/
+.bio-section p {
+  color: #f4efe6;
+  line-height: 1.8; 
+  margin-bottom: 20px;
+  font-size: 1rem;
+ } }
