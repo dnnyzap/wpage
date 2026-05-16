@@ -17,6 +17,22 @@
   padding: 40px 20px;
 }
 
+.avatar-container {
+  position: relative;
+  display: inline-block;
+  margin-bottom: 20px;
+}
+
+.profile-avatar {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  border: 3px solid var (var(--accent-purple));
+  object-fit: cover;
+  display: block;
+}
+
+
 .full-screen-bg {
   position: fixed;
   top: 0;
@@ -58,13 +74,14 @@
 
 .discord-status-dot {
   position: absolute;
-  bottom: 30px;
-  right: 12px;
+  bottom: 5px;
+  right: 5px;
   width: 22px;
   height: 22px;
-  background: #23a559; 
-  border: 4px solid #1e1414; 
   border-radius: 50%;
+  border: 4px solid #1e1414;
+  z-index: 3;
+  transition: background 0.3s ease; 
 }
 
 .discord-presence img {
@@ -77,26 +94,25 @@
 
 .social-links {
   display: flex;
-  justify-content: center; 
-  gap: 12px;               
-  margin-top: 25px;
+  justify-content: center;
+  gap: 16px; 
+  margin-top: 30px;
 }
 
 .social-links a {
+  padding: 10px 20px;
   background: rgba(255, 255, 255, 0.05);
   border: 1px solid rgba(255, 255, 255, 0.1);
-  padding: 10px 18px;
   border-radius: 12px;
   text-decoration: none;
   color: #f4efe6;
   font-size: 0.9rem;
-  transition: all 0.2s ease;
+  transition: 0.2s ease-in-out;
 }
 
 .social-links a:hover {
-  background: rgba(157, 125, 250, 0.2); 
+  background: rgba(157, 125, 250, 0.2);
   border-color: #9d7dfa;
-  transform: translateY(-2px);
 }
 
 .bio-section {
@@ -108,4 +124,25 @@
   line-height: 1.8; 
   margin-bottom: 20px;
   font-size: 1rem;
- } }
+ } 
+}
+
+.live-presence-text {
+  margin: 20px 0;
+  padding: 10px;
+  background: rgba(255, 255, 255, 0.02);
+  border-radius: 8px;
+}
+
+.live-presence-text p {
+  color: #ff7a59;
+  font-size: 1.1rem;
+  letter-spacing: 0.5px;
+  margin: 0;
+}
+
+
+.discord-status-dot.online { background: #23a559;}
+.discord-status-dot.idle { background: #f0b232;}
+.discord-status-dot.dnd { background: #f23f43;}
+.discord-status-dot.offline { background: #80848e;}
