@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import './App.css'
-import defaultheroImg from './assets/robinn.jpg'
+import defaultheroImg from './assets/icon.jpg'
 import drawingImg from './assets/friri.jpg'
 
 function App() {
