@@ -6,6 +6,21 @@
   --bg-dark: #1a0f0f;
 }
 
+
+
+.retro-icon {
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+
+  border: 2px solid #000000;
+  box-shadow: 4px 4px 0 #000000;
+
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+
 .main-wrapper {
   min-height: 100vh;
   width: 100%;
@@ -15,7 +30,10 @@
   position: relative;
   background-color: var(--bg-dark);
   padding: 40px 20px;
+  
 }
+
+
 
 .avatar-container {
   position: relative;
@@ -23,6 +41,7 @@
   margin-bottom: 20px;
 }
 
+/*
 .profile-avatar {
   width: 120px;
   height: 120px;
@@ -31,7 +50,7 @@
   object-fit: cover;
   display: block;
 }
-
+*/
 
 .full-screen-bg {
   position: fixed;
