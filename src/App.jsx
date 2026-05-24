@@ -1,7 +1,28 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, use } from 'react'
 import './App.css'
 import defaultheroImg from './assets/icon.jpg'
 import drawingImg from './assets/cosmosteste.gif'
+import { get } from 'use-lanyard'
+
+
+const ElapsedTime = ({ start}) => {
+  const [time, setTime] = useState('00:00')
+
+  useEffect(() => {
+    const update = () => {
+      const diff = Math.floor((Date.now() - start) / 1000)
+      const h = Math.floor(diff / 3600)
+      const m = Math.floor((diff % 3600) / 60)
+      const s = diff % 60
+      setTime(`${h > 0 ? h + ':' : ''}${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')} elapsed`)
+    }
+    update()
+    const int = setInterval(update, 1000)
+    return () => clearInterval(int)
+  }, [start])
+
+  return <span>{time}</span>
+}
 
 
 function App() {
@@ -22,43 +43,74 @@ function App() {
     fetchPresence()
 
     const interval = setInterval(fetchPresence, 3000)
-
     return () => clearInterval(interval)
   }, [])
 
   
   const status = lanyardData?.discord_status || 'offline'
-  let activity = "errorrrararar."
-  
   let avatarUrl = defaultheroImg
 
 
+  let activityUI = <p className='live-presence-text'><em>Connecting....</em></p>
+
+
   if (lanyardData) {
-    activity ="I'm not doing anythin right now :c"
+    activityUI = <p className='live-presence-text'><em>I'm not doing anything right now :c</em></p>
 
-    if (lanyardData.discord_user && lanyardData.discord_user.avatar) {
-      const userId = lanyardData.discord_user.id;
-      const avatarHash = lanyardData.discord_user.avatar;
-
-      const isGif = avatarHash.startsWith('a_');
-      const extension = isGif ? 'gif' : 'webp';
-
-      avatarUrl = `https://cdn.discordapp.com/avatars/${userId}/${avatarHash}.${extension}?size=256`;
+    if (lanyardData.discord_user?.avatar) {
+      const { id, avatar } = lanyardData.discord_user
+      const extension = avatar.startsWith('a_') ? 'gif' : 'webp'
+      avatarUrl = `https://cdn.discordapp.com/avatars/${id}/${avatar}.${extension}?size=256`;
     }
 
     if (lanyardData.activities && lanyardData.activities.length > 0) {
       const currentGame = lanyardData.activities.find(act => act.type === 0)
 
       if (currentGame) {
-          if (currentGame.name === "Visual Studio Code") {
-        activity = `Coding: ${currentGame.details}`
-      } else {
-        activity = `Playing: ${currentGame.name}`
-      }
-    } else if (lanyardData.listening_to_spotify) {
-    
-      activity = `Listening to: ${lanyardData.spotify.song}`
-    }
+        const appId = currentGame.application_id
+        const largeImage = currentGame.assets?.large_image
+        const smallImage = currentGame.assets?.small_image
+
+        const getImageUrl = (assetId) => {
+          if (!assetId) return null;
+          if (assetId.startsWith('mp:')) return `https://media.discordapp.net/${assetId.replace('mp:', '')}`;
+          return `https://cdn.discordapp.com/app-assets/${appId}/${assetId}.png`;
+        }
+
+        const largeUrl = getImageUrl(largeImage)
+        const smallUrl = getImageUrl(smallImage)
+
+        activityUI = (
+          <div className="discord-activity-card">
+            <div className='activity-images'>
+              {largeUrl && <img src={largeUrl} className='large-image' alt='Large Asset' />}
+              {smallUrl && <img src={smallUrl} className='small-image' alt='Small Asset' />}
+            </div>
+            <div className='activity-info'>
+              <h4>{currentGame.name}</h4>
+              {currentGame.details && <p>{currentGame.details}</p>}
+              {currentGame.state && <p>{currentGame.state}</p>}
+              {currentGame.timestamps?.start && (
+                <p><ElapsedTime start={currentGame.timestamps.start} /></p>
+              )}
+            </div>
+          </div>
+        )
+      }else if (lanyardData.listening_to_spotify) {
+        const spotify = lanyardData.spotify;
+        activityUI = (
+          <div className='discord-activity-card'>
+            <div className='activity-images'>
+              <img src={spotify.album_art_url} className='large-image' alt='Album Art' />
+            </div>
+            <div className='activity-info'>
+              <h4>Listening to Spotify</h4>
+              <p style={{ color: '#1DB954', fontWeight: 'bold' }}>{spotify.song}</p>
+              <p>by {spotify.artist}</p>
+            </div>
+          </div>
+        )
+      }   
     }
   
   
@@ -75,9 +127,7 @@ function App() {
           <h1>Hi, I'm <span className='highlight'>Damiao</span>!</h1>
           <p className='status'>💔</p>
           
-          <div className='live-presence-text'>
-            <p><em>{activity}</em></p>
-          </div>
+          {activityUI}
         </header>
 
         <section className="bio-section">
