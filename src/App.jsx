@@ -57,7 +57,7 @@ function App() {
 
 
   if (lanyardData) {
-    activityUI = <p className='live-presence-text'><em>I'm not doing anything right now :c</em></p>
+    activityUI = <p className='live-presence-text'><em>Probably doing something else...</em></p>
 
     if (lanyardData.discord_user?.avatar) {
       const { id, avatar } = lanyardData.discord_user
@@ -159,6 +159,7 @@ function App() {
               <a href='https://x.com/dnnyzap' target='_blank' rel='noreferrer'>
                 <FaXTwitter />
               </a>
+
             </div>
           </footer>
         </div>
