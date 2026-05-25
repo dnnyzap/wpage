@@ -1,6 +1,6 @@
 :root {
-  --accent-purple: #9d7dfa;
-  --accent-orange: #b878aa;
+  --accent-purple: #2e071e;
+  --accent-orange: #877ce9;
   --text-white: #ffffff;
   --text-gray: #a0a0a0;
   --bg-dark: #1a0f0f;
@@ -176,6 +176,10 @@
   color: #f4efe6;
   font-size: 0.9rem;
   transition: 0.2s ease-in-out;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
 }
 
 .social-links a:hover {
@@ -195,19 +199,9 @@
  } 
 }
 
-.live-presence-text {
-  margin: 20px 0;
-  padding: 10px;
-  background: rgba(255, 255, 255, 0.02);
-  border-radius: 8px;
-}
 
-.live-presence-text p {
-  color: #b878aa;
-  font-size: 1.1rem;
-  letter-spacing: 0.5px;
-  margin: 0;
-}
+
+
 
 
 .discord-status-dot.online { background: #23a559;}
