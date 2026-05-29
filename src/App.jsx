@@ -5,6 +5,9 @@ import drawingImg from './assets/cosmosteste.gif'
 import { get } from 'use-lanyard'
 import { FaGithub, FaLinkedin, FaEnvelope } from 'react-icons/fa'
 import { FaXTwitter } from 'react-icons/fa6'
+import faceImg from './assets/danny.jpeg'
+
+
 
 
 const ElapsedTime = ({ start }) => {
@@ -29,6 +32,7 @@ const ElapsedTime = ({ start }) => {
 
 function App() {
   const [lanyardData, setLanyardData] = useState(null)
+  const [isFaceMode, setIsFaceMode] = useState(false)
 
   useEffect(() => {
     const fetchPresence = () => {
@@ -114,57 +118,70 @@ function App() {
         )
       }
     }
-
-
-    return (
-      <div className="main-wrapper">
-        <img src={drawingImg} className='full-screen-bg' alt='' />
-
-        <div className="portfolio-card">
-          <header className="profile-header">
-            <div className="avatar-container">
-              <img src={avatarUrl} alt="Danny" className="profile-avatar retro-icon" />
-              <div className={`discord-status-dot ${status}`}></div>
-            </div>
-            <h1>Hi, I'm <span className='highlight'>Damiao</span>!</h1>
-            <p className='status'>💔</p>
-
-            {activityUI}
-          </header>
-
-          <section className="bio-section">
-            <p>
-              I'm a <strong>25 years old</strong> student of <strong>Analysis and Systems Development</strong> based in Manaus.
-              I'm in my <strong>fourth period</strong> focusing on <strong>Java, Spring Boot, and JavaScript</strong>.
-            </p>
-            <p>
-              I'm the lead developer for <span className='highlight'>FisioNear</span>, using computer vision to guide physical therapy movements.
-            </p>
-            <p>
-              Outside of coding, I enjoy <strong>competitive video games, soulslikes</strong>, and creating <strong>digital art</strong>.
-            </p>
-          </section>
-
-          <footer className='card-footer'>
-            <div className='social-links'>
-              <a href='https://github.com/dnnyzap' target="_blank" rel="noreferrer">
-                <FaGithub />
-              </a>
-              <a href='https://www.linkedin.com/in/damiaonunes' target='_blank' rel='noreferrer'>
-                <FaLinkedin />
-              </a>
-              <a href='mailto:damiao.barbosa.02@gmail.com'>
-                <FaEnvelope />
-              </a>
-              <a href='https://x.com/dnnyzap' target='_blank' rel='noreferrer'>
-                <FaXTwitter />
-              </a>
-
-            </div>
-          </footer>
-        </div>
-      </div>
-    )
   }
+
+
+  let displayAvatar = avatarUrl;
+  if (isFaceMode) {
+    displayAvatar = faceImg;
+  }
+
+  return (
+    <div className="main-wrapper">
+      <img src={drawingImg} className='full-screen-bg' alt='' />
+
+      <div className="portfolio-card">
+        <header className="profile-header">
+          <div className="avatar-container">
+            <img src={displayAvatar} alt="Danny" className="profile-avatar retro-icon" />
+            <div className={`discord-status-dot ${status}`}></div>
+          </div>
+          <h1>Hi, I'm <span className='highlight'>Damiao</span>!</h1>
+          <p className='status'>💔</p>
+
+          <button
+            className='face-mode-toggle'
+            onClick={() => setIsFaceMode(!isFaceMode)}
+          >
+            {isFaceMode ? 'Show Avatar' : 'Show Face'}
+          </button>
+
+          {activityUI}
+        </header>
+
+        <section className="bio-section">
+          <p>
+            I'm a <strong>25 years old</strong> student of <strong>Analysis and Systems Development</strong> based in Manaus.
+            I'm in my <strong>fourth period</strong> focusing on <strong>Java, Spring Boot, and JavaScript</strong>.
+          </p>
+          <p>
+            I'm the lead developer for <span className='highlight'>FisioNear</span>, using computer vision to guide physical therapy movements.
+          </p>
+          <p>
+            Outside of coding, I enjoy <strong>competitive video games, soulslikes</strong>, and creating <strong>digital art</strong>.
+          </p>
+        </section>
+
+        <footer className='card-footer'>
+          <div className='social-links'>
+            <a href='https://github.com/dnnyzap' target="_blank" rel="noreferrer">
+              <FaGithub />
+            </a>
+            <a href='https://www.linkedin.com/in/damiaonunes' target='_blank' rel='noreferrer'>
+              <FaLinkedin />
+            </a>
+            <a href='mailto:damiao.barbosa.02@gmail.com'>
+              <FaEnvelope />
+            </a>
+            <a href='https://x.com/dnnyzap' target='_blank' rel='noreferrer'>
+              <FaXTwitter />
+            </a>
+
+          </div>
+        </footer>
+      </div>
+    </div>
+  )
 }
+
 export default App
