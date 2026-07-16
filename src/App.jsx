@@ -5,7 +5,7 @@ import drawingImg from './assets/cosmosteste.gif'
 import { get } from 'use-lanyard'
 import { FaGithub, FaLinkedin, FaEnvelope } from 'react-icons/fa'
 import { FaXTwitter } from 'react-icons/fa6'
-import faceImg from './assets/danny.jpeg'
+import faceImg from './assets/IMG_2948.png'
 
 
 
@@ -56,11 +56,16 @@ function App() {
   const status = lanyardData?.discord_status || 'offline'
   let avatarUrl = defaultheroImg
 
+  let decorationUrl = null;
 
   let activityUI = <p className='live-presence-text'><em>Connecting....</em></p>
 
 
   if (lanyardData) {
+    if (lanyardData.discord_user?.avatar_decoration_data) {
+      const decorationId = lanyardData.discord_user.avatar_decoration_data.asset;
+      decorationUrl = `https://cdn.discordapp.com/avatar-decoration-presets/${decorationId}.png?size=256`;
+    }
     activityUI = <p className='live-presence-text'><em>Probably doing something else...</em></p>
 
     if (lanyardData.discord_user?.avatar) {
@@ -121,10 +126,8 @@ function App() {
   }
 
 
-  let displayAvatar = avatarUrl;
-  if (isFaceMode) {
-    displayAvatar = faceImg;
-  }
+  let displayAvatar = isFaceMode ? faceImg : avatarUrl;
+
 
   return (
     <div className="main-wrapper">
@@ -141,6 +144,12 @@ function App() {
               style={{ cursor: 'pointer' }}
               title={isFaceMode ? 'Mostrar Avatar' : 'Mostrar Rosto'}
             />
+
+            <img
+              src={decorationUrl}
+              alt="Avatar Decoration"
+              className="avatar-decoration"
+            />
             <div className={`discord-status-dot ${status}`}></div>
           </div>
           <h1>Hi, I'm <span className='highlight'>Damiao</span>!</h1>
@@ -153,9 +162,6 @@ function App() {
           <p>
             I'm a <strong>25 years old</strong> student of <strong>Analysis and Systems Development</strong> based in Manaus.
             I'm in my <strong>fourth period</strong> focusing on <strong>Java, Spring Boot, and JavaScript</strong>.
-          </p>
-          <p>
-            I'm the lead developer for <span className='highlight'>FisioNear</span>, using computer vision to guide physical therapy movements.
           </p>
           <p>
             Outside of coding, I enjoy <strong>competitive video games, soulslikes</strong>, and creating <strong>digital art</strong>.
