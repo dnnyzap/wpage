@@ -90,16 +90,6 @@
   margin-bottom: 20px;
 }
 
-/*
-.profile-avatar {
-  width: 120px;
-  height: 120px;
-  border-radius: 50%;
-  border: 3px solid var (var(--accent-purple));
-  object-fit: cover;
-  display: block;
-}
-*/
 
 .full-screen-bg {
   position: fixed;
@@ -199,31 +189,10 @@
  } 
 }
 
-.face-mode-toggle { 
-  background-color: #1e1f22;
-  color: #f2f3f5;
-  border: 1px solid #383a40;
-  padding: 8px 16px;
-  border-radius: 8px;
-  font-size: 13px;
-  font-weight: 600;
-  cursor: pointer;
-  margin-top: 16px;
-  transition: all 0.2s ease-in-out;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-}
 
-.face-mode-toggle:hover {
-  background-color: #2b2d31;
-  border-color: #4e5058;
-  transform: translateY(-2px);
-}
 
-.face-mode-toggle:active {
-  transform: translateY(0);
-}
+
+
 
 
 

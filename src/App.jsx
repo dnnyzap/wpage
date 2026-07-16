@@ -133,18 +133,18 @@ function App() {
       <div className="portfolio-card">
         <header className="profile-header">
           <div className="avatar-container">
-            <img src={displayAvatar} alt="Danny" className="profile-avatar retro-icon" />
+            <img
+              src={displayAvatar}
+              alt="Danny"
+              className="profile-avatar retro-icon"
+              onClick={() => setIsFaceMode(!isFaceMode)}
+              style={{ cursor: 'pointer' }}
+              title={isFaceMode ? 'Mostrar Avatar' : 'Mostrar Rosto'}
+            />
             <div className={`discord-status-dot ${status}`}></div>
           </div>
           <h1>Hi, I'm <span className='highlight'>Damiao</span>!</h1>
           <p className='status'>💔</p>
-
-          <button
-            className='face-mode-toggle'
-            onClick={() => setIsFaceMode(!isFaceMode)}
-          >
-            {isFaceMode ? 'Show Avatar' : 'Show Face'}
-          </button>
 
           {activityUI}
         </header>
