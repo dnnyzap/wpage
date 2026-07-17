@@ -2,8 +2,9 @@ import { useState, useEffect, use } from 'react'
 import './App.css'
 import defaultheroImg from './assets/icon.jpg'
 import drawingImg from './assets/robbie.gif'
+
 import { get } from 'use-lanyard'
-import { FaGithub, FaLinkedin, FaEnvelope } from 'react-icons/fa'
+import { FaGithub, FaLinkedin, FaEnvelope, FaCalendarAlt, FaClock } from 'react-icons/fa'
 import { FaXTwitter } from 'react-icons/fa6'
 import faceImg from './assets/IMG_2948.png'
 
@@ -13,22 +14,46 @@ import faceImg from './assets/IMG_2948.png'
 const ElapsedTime = ({ start }) => {
   const [time, setTime] = useState('00:00')
 
-  useEffect(() => {
-    const update = () => {
-      const diff = Math.floor((Date.now() - start) / 1000)
-      const h = Math.floor(diff / 3600)
-      const m = Math.floor((diff % 3600) / 60)
-      const s = diff % 60
-      setTime(`${h > 0 ? h + ':' : ''}${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')} elapsed`)
-    }
-    update()
-    const int = setInterval(update, 1000)
-    return () => clearInterval(int)
-  }, [start])
-
-  return <span>{time}</span>
 }
 
+const LocalTime = () => {
+  const [time, setTime] = useState(new Date())
+
+  useEffect(() => {
+    const timer = setInterval(() => setTime(new Date()), 1000)
+    return () => clearInterval(timer)
+  }, [])
+
+  const dateStr = new Intl.DateTimeFormat('pt-BR', {
+    timeZone: 'America/Manaus',
+    weekday: 'short',
+    day: 'numeric',
+    month: 'short'
+
+  }).format(time)
+
+  const timeStr = new Intl.DateTimeFormat('en-US', {
+    timeZone: 'America/Manaus',
+    hour: 'numeric',
+    minute: '2-digit',
+    second: '2-digit',
+    hour12: true
+  }).format(time)
+
+  return (
+    <div className="local-time-wrapper">
+      <p className="local-time-label">Local Time:</p>
+      <div className="time-badges">
+        <div className="badge date-badge">
+          <FaCalendarAlt /> <span>{dateStr}</span>
+          </div>
+        <div className="badge time-badge">
+          <FaClock /> <span>{timeStr}</span>
+        </div>
+      </div>
+    </div>
+  )
+}
 
 function App() {
   const [lanyardData, setLanyardData] = useState(null)
@@ -154,6 +179,8 @@ function App() {
           </div>
           <h1>Hi, I'm <span className='highlight'>Damiao</span>!</h1>
           <p className='status'>💔</p>
+
+          <LocalTime />
 
           {activityUI}
         </header>
