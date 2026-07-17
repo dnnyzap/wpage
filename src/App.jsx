@@ -1,7 +1,7 @@
 import { useState, useEffect, use } from 'react'
 import './App.css'
 import defaultheroImg from './assets/icon.jpg'
-import drawingImg from './assets/cosmosteste.gif'
+import drawingImg from './assets/robbie.gif'
 import { get } from 'use-lanyard'
 import { FaGithub, FaLinkedin, FaEnvelope } from 'react-icons/fa'
 import { FaXTwitter } from 'react-icons/fa6'

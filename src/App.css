@@ -119,9 +119,9 @@
   z-index: 2;
   width: 100%;
   max-width: 650px;
-  background: rgba(30, 20, 20, 0.92);
+  background: rgba(87, 16, 158, 0.041);
   backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 122, 89, 0.25);
+  border: 1px solid rgba(87, 16, 158, 0.288);
   border-radius: 24px;
   padding: 45px;
   text-align: center;
