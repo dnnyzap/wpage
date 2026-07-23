@@ -173,29 +173,23 @@
 
 .social-links {
   display: flex;
-  justify-content: center;
-  gap: 16px; 
-  margin-top: 30px;
+  align-items: center;
+  gap: 25px; 
 }
 
-.social-links a {
-  padding: 10px 20px;
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 12px;
-  text-decoration: none;
-  color: #f4efe6;
-  font-size: 0.9rem;
-  transition: 0.2s ease-in-out;
+.social-links a, .download-cv-button {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
+  font-size: 1.6rem;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  cursor: pointer;
 }
 
 .social-links a:hover {
-  background: rgba(157, 125, 250, 0.2);
-  border-color: #9d7dfa;
+  color: var(--accent-orange, #ff6b6b);
+  transform: translateY(-2px);
 }
 
 .bio-section {
@@ -260,6 +254,40 @@
   background-color: #9297f3;
 } 
 
+.card-footer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 25px;
+  margin-top: 30px;
+  padding-top: 20px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.download-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background-color: var(--accent-orange, #ff6b6b);
+  color: #ffffff;
+  padding: 8px 16px; 
+  border-radius: 8px;
+  text-decoration: none;
+  font-family: 'monospace', sans-serif;
+  font-weight: 600;
+  font-size: 0.85rem; 
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+}
+
+.social-links a:hover, .download-cv-button:hover {
+  color: var(--accent-orange, #ff6b6b);
+  transform: translateY(-2px);
+}
+
+.download-btn:active {
+  transform: translateY(0);
+}
 
 
 .discord-status-dot.online { background: #23a559;}

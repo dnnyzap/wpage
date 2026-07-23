@@ -4,9 +4,11 @@ import defaultheroImg from './assets/icon.jpg'
 import drawingImg from './assets/robbie.gif'
 
 import { get } from 'use-lanyard'
-import { FaGithub, FaLinkedin, FaEnvelope, FaCalendarAlt, FaClock } from 'react-icons/fa'
+import { FaGithub, FaLinkedin, FaEnvelope, FaCalendarAlt, FaClock, FaDownload } from 'react-icons/fa'
 import { FaXTwitter } from 'react-icons/fa6'
 import faceImg from './assets/IMG_2948.png'
+import curriculoPdf from './assets/curriculo_damiao_nunes_21_07.pdf'
+
 
 
 
@@ -209,8 +211,13 @@ function App() {
             <a href='https://x.com/dnnyzap' target='_blank' rel='noreferrer'>
               <FaXTwitter />
             </a>
-
           </div>
+          <a 
+          href={curriculoPdf}
+          download="curriculo_damiao.pdf" 
+          className='download-cv-button'>
+            <FaDownload />
+          </a>
         </footer>
       </div>
     </div>
