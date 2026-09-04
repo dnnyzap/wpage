@@ -1,21 +1,110 @@
-import { useState, useEffect, use } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import './App.css'
-import defaultheroImg from './assets/icon.jpg'
-import drawingImg from './assets/robbie.gif'
-
-import { get } from 'use-lanyard'
-import { FaGithub, FaLinkedin, FaEnvelope, FaCalendarAlt, FaClock, FaDownload } from 'react-icons/fa'
-import { FaXTwitter } from 'react-icons/fa6'
+import defaultHeroImg from './assets/icon.jpg'
+import drawingImg from './assets/drawingms.png'
 import faceImg from './assets/IMG_2948.png'
 import curriculoPdf from './assets/curriculo_damiao_nunes_21_07.pdf'
+import { FaCalendarAlt, FaClock, FaDownload, FaEnvelope, FaGithub, FaLinkedin } from 'react-icons/fa'
+import { FaXTwitter } from 'react-icons/fa6'
 
+const DISCORD_USER_ID = '330702585352683520'
+const MANAUS_TIME_ZONE = 'America/Manaus'
 
+const statusLabels = {
+  online: 'online',
+  idle: 'away',
+  dnd: 'busy',
+  offline: 'offline',
+}
 
+const skills = ['Java', 'Spring Boot', 'JavaScript', 'React', 'CSS', 'Git']
 
+const socials = [
+  { href: 'https://github.com/dnnyzap', label: 'GitHub', icon: <FaGithub /> },
+  { href: 'https://www.linkedin.com/in/damiaonunes', label: 'LinkedIn', icon: <FaLinkedin /> },
+  { href: 'mailto:damiao.barbosa.02@gmail.com', label: 'Email', icon: <FaEnvelope /> },
+  { href: 'https://x.com/dnnyzap', label: 'X', icon: <FaXTwitter /> },
+]
+
+const Window = ({ title, children, className = '', draggable = false, id }) => {
+  const dragStartRef = useRef(null)
+  const [offset, setOffset] = useState({ x: 0, y: 0 })
+
+  const handlePointerDown = (event) => {
+    if (!draggable || event.target.closest('button')) return
+
+    event.currentTarget.setPointerCapture(event.pointerId)
+    dragStartRef.current = {
+      pointerId: event.pointerId,
+      startX: event.clientX,
+      startY: event.clientY,
+      originX: offset.x,
+      originY: offset.y,
+    }
+  }
+
+  const handlePointerMove = (event) => {
+    const dragStart = dragStartRef.current
+    if (!dragStart || dragStart.pointerId !== event.pointerId) return
+
+    setOffset({
+      x: dragStart.originX + event.clientX - dragStart.startX,
+      y: dragStart.originY + event.clientY - dragStart.startY,
+    })
+  }
+
+  const handlePointerUp = (event) => {
+    if (dragStartRef.current?.pointerId === event.pointerId) {
+      dragStartRef.current = null
+    }
+  }
+
+  return (
+    <section
+      className={`retro-window ${draggable ? 'is-draggable' : ''} ${className}`}
+      id={id}
+      style={draggable ? { '--drag-x': `${offset.x}px`, '--drag-y': `${offset.y}px` } : undefined}
+    >
+      <div
+        className="window-titlebar"
+        onPointerDown={handlePointerDown}
+        onPointerMove={handlePointerMove}
+        onPointerUp={handlePointerUp}
+        onPointerCancel={handlePointerUp}
+      >
+        <span>{title}</span>
+        <button type="button" aria-label={`Close ${title}`}>x</button>
+      </div>
+      <div className="window-body">
+        {children}
+      </div>
+    </section>
+  )
+}
 
 const ElapsedTime = ({ start }) => {
   const [time, setTime] = useState('00:00')
 
+  useEffect(() => {
+    const updateTime = () => {
+      const elapsedSeconds = Math.max(0, Math.floor((Date.now() - start) / 1000))
+      const hours = Math.floor(elapsedSeconds / 3600)
+      const minutes = Math.floor((elapsedSeconds % 3600) / 60)
+      const seconds = elapsedSeconds % 60
+
+      setTime(
+        hours > 0
+          ? `${hours}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`
+          : `${minutes}:${String(seconds).padStart(2, '0')}`,
+      )
+    }
+
+    updateTime()
+    const timer = setInterval(updateTime, 1000)
+    return () => clearInterval(timer)
+  }, [start])
+
+  return <span>{time}</span>
 }
 
 const LocalTime = () => {
@@ -27,34 +116,77 @@ const LocalTime = () => {
   }, [])
 
   const dateStr = new Intl.DateTimeFormat('pt-BR', {
-    timeZone: 'America/Manaus',
-    weekday: 'short',
-    day: 'numeric',
-    month: 'short'
-
+    timeZone: MANAUS_TIME_ZONE,
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric',
   }).format(time)
 
   const timeStr = new Intl.DateTimeFormat('en-US', {
-    timeZone: 'America/Manaus',
+    timeZone: MANAUS_TIME_ZONE,
     hour: 'numeric',
     minute: '2-digit',
-    second: '2-digit',
-    hour12: true
+    hour12: true,
   }).format(time)
 
   return (
-    <div className="local-time-wrapper">
-      <p className="local-time-label">Local Time:</p>
-      <div className="time-badges">
-        <div className="badge date-badge">
-          <FaCalendarAlt /> <span>{dateStr}</span>
-          </div>
-        <div className="badge time-badge">
-          <FaClock /> <span>{timeStr}</span>
-        </div>
-      </div>
+    <div className="taskbar-clock" aria-label="Local time in Manaus">
+      <span><FaCalendarAlt /> {dateStr}</span>
+      <span><FaClock /> {timeStr}</span>
     </div>
   )
+}
+
+const getDiscordAssetUrl = (activity, assetId) => {
+  if (!assetId) return null
+  if (assetId.startsWith('mp:')) return `https://media.discordapp.net/${assetId.replace('mp:', '')}`
+  return `https://cdn.discordapp.com/app-assets/${activity.application_id}/${assetId}.png`
+}
+
+const DiscordActivity = ({ data }) => {
+  if (!data) {
+    return <p className="presence-empty">Connecting to Discord...</p>
+  }
+
+  const currentGame = data.activities?.find(activity => activity.type === 0)
+
+  if (currentGame) {
+    const largeUrl = getDiscordAssetUrl(currentGame, currentGame.assets?.large_image)
+    const smallUrl = getDiscordAssetUrl(currentGame, currentGame.assets?.small_image)
+
+    return (
+      <div className="discord-activity-card">
+        <div className="activity-images">
+          {largeUrl && <img src={largeUrl} className="large-image" alt="" />}
+          {smallUrl && <img src={smallUrl} className="small-image" alt="" />}
+        </div>
+        <div className="activity-info">
+          <span className="activity-kicker">playing now</span>
+          <h3>{currentGame.name}</h3>
+          {currentGame.details && <p>{currentGame.details}</p>}
+          {currentGame.state && <p>{currentGame.state}</p>}
+          {currentGame.timestamps?.start && <p>for <ElapsedTime start={currentGame.timestamps.start} /></p>}
+        </div>
+      </div>
+    )
+  }
+
+  if (data.listening_to_spotify && data.spotify) {
+    return (
+      <div className="discord-activity-card">
+        <div className="activity-images">
+          <img src={data.spotify.album_art_url} className="large-image" alt="" />
+        </div>
+        <div className="activity-info">
+          <span className="activity-kicker spotify">spotify</span>
+          <h3>{data.spotify.song}</h3>
+          <p>by {data.spotify.artist}</p>
+        </div>
+      </div>
+    )
+  }
+
+  return <p className="presence-empty">Probably doing something else...</p>
 }
 
 function App() {
@@ -63,14 +195,14 @@ function App() {
 
   useEffect(() => {
     const fetchPresence = () => {
-      fetch('https://api.lanyard.rest/v1/users/330702585352683520')
+      fetch(`https://api.lanyard.rest/v1/users/${DISCORD_USER_ID}`)
         .then(res => res.json())
         .then(response => {
           if (response.success) {
             setLanyardData(response.data)
           }
         })
-        .catch(error => console.error("Lanyard fetch error:", error))
+        .catch(error => console.error('Lanyard fetch error:', error))
     }
 
     fetchPresence()
@@ -79,148 +211,102 @@ function App() {
     return () => clearInterval(interval)
   }, [])
 
+  const avatarUrl = useMemo(() => {
+    const discordUser = lanyardData?.discord_user
+
+    if (!discordUser?.avatar) {
+      return defaultHeroImg
+    }
+
+    const extension = discordUser.avatar.startsWith('a_') ? 'gif' : 'webp'
+    return `https://cdn.discordapp.com/avatars/${discordUser.id}/${discordUser.avatar}.${extension}?size=256`
+  }, [lanyardData])
 
   const status = lanyardData?.discord_status || 'offline'
-  let avatarUrl = defaultheroImg
-
-  let decorationUrl = null;
-
-  let activityUI = <p className='live-presence-text'><em>Connecting....</em></p>
-
-
-  if (lanyardData) {
-    if (lanyardData.discord_user?.avatar_decoration_data) {
-      const decorationId = lanyardData.discord_user.avatar_decoration_data.asset;
-      decorationUrl = `https://cdn.discordapp.com/avatar-decoration-presets/${decorationId}.png?size=256`;
-    }
-    activityUI = <p className='live-presence-text'><em>Probably doing something else...</em></p>
-
-    if (lanyardData.discord_user?.avatar) {
-      const { id, avatar } = lanyardData.discord_user
-      const extension = avatar.startsWith('a_') ? 'gif' : 'webp'
-      avatarUrl = `https://cdn.discordapp.com/avatars/${id}/${avatar}.${extension}?size=256`;
-    }
-
-    if (lanyardData.activities && lanyardData.activities.length > 0) {
-      const currentGame = lanyardData.activities.find(act => act.type === 0)
-
-      if (currentGame) {
-        const appId = currentGame.application_id
-        const largeImage = currentGame.assets?.large_image
-        const smallImage = currentGame.assets?.small_image
-
-        const getImageUrl = (assetId) => {
-          if (!assetId) return null;
-          if (assetId.startsWith('mp:')) return `https://media.discordapp.net/${assetId.replace('mp:', '')}`;
-          return `https://cdn.discordapp.com/app-assets/${appId}/${assetId}.png`;
-        }
-
-        const largeUrl = getImageUrl(largeImage)
-        const smallUrl = getImageUrl(smallImage)
-
-        activityUI = (
-          <div className="discord-activity-card">
-            <div className='activity-images'>
-              {largeUrl && <img src={largeUrl} className='large-image' alt='Large Asset' />}
-              {smallUrl && <img src={smallUrl} className='small-image' alt='Small Asset' />}
-            </div>
-            <div className='activity-info'>
-              <h4>{currentGame.name}</h4>
-              {currentGame.details && <p>{currentGame.details}</p>}
-              {currentGame.state && <p>{currentGame.state}</p>}
-              {currentGame.timestamps?.start && (
-                <p><ElapsedTime start={currentGame.timestamps.start} /></p>
-              )}
-            </div>
-          </div>
-        )
-      } else if (lanyardData.listening_to_spotify) {
-        const spotify = lanyardData.spotify;
-        activityUI = (
-          <div className='discord-activity-card'>
-            <div className='activity-images'>
-              <img src={spotify.album_art_url} className='large-image' alt='Album Art' />
-            </div>
-            <div className='activity-info'>
-              <h4>Listening to Spotify</h4>
-              <p style={{ color: '#1DB954', fontWeight: 'bold' }}>{spotify.song}</p>
-              <p>by {spotify.artist}</p>
-            </div>
-          </div>
-        )
-      }
-    }
-  }
-
-
-  let displayAvatar = isFaceMode ? faceImg : avatarUrl;
-
+  const displayAvatar = isFaceMode ? faceImg : avatarUrl
 
   return (
-    <div className="main-wrapper">
-      <img src={drawingImg} className='full-screen-bg' alt='' />
+    <main className="desktop-shell">
+      <nav className="taskbar" aria-label="Portfolio sections">
+        <button type="button" className="start-button">Start</button>
+        <a href="#about">about</a>
+        <a href="#activity">activity</a>
+        <a href="#socials">socials</a>
+        <a href={curriculoPdf} download="curriculo_damiao.pdf" className="taskbar-icon" aria-label="Download CV">
+          <FaDownload />
+        </a>
+        <LocalTime />
+      </nav>
 
-      <div className="portfolio-card">
-        <header className="profile-header">
-          <div className="avatar-container">
-            <img
-              src={displayAvatar}
-              alt="Danny"
-              className="profile-avatar retro-icon"
-              onClick={() => setIsFaceMode(!isFaceMode)}
-              style={{ cursor: 'pointer' }}
-              title={isFaceMode ? 'Mostrar Avatar' : 'Mostrar Rosto'}
-            />
+      <div className="desktop-grid">
+        <section className="intro-panel" id="about">
+          <p className="intro-kicker">portfolio.exe</p>
+          <h1>
+            about
+            <span>me!</span>
+          </h1>
 
-            <img
-              src={decorationUrl}
-              alt="Avatar Decoration"
-              className="avatar-decoration"
-            />
-            <div className={`discord-status-dot ${status}`}></div>
+          <a className="signature" href="mailto:damiao.barbosa.02@gmail.com">
+            Damiao Nunes
+          </a>
+
+          <p className="bio-copy">
+            Student of <strong>Analysis and Systems Development</strong> based in Manaus.
+            Currently focused on <strong>Java</strong>, <strong> Spring Boot</strong>, and
+            <strong> JavaScript</strong>, with a soft spot for competitive games, soulslikes,
+            and digital art.
+          </p>
+
+          <div className="skills-list" aria-label="Skills">
+            {skills.map(skill => (
+              <span key={skill}>{skill}</span>
+            ))}
           </div>
-          <h1>Hi, I'm <span className='highlight'>Damiao</span>!</h1>
-          <p className='status'>💔</p>
-
-          <LocalTime />
-
-          {activityUI}
-        </header>
-
-        <section className="bio-section">
-          <p>
-            I'm a <strong>25 years old</strong> student of <strong>Analysis and Systems Development</strong> based in Manaus.
-            I'm in my <strong>fourth period</strong> focusing on <strong>Java, Spring Boot, and JavaScript</strong>.
-          </p>
-          <p>
-            Outside of coding, I enjoy <strong>competitive video games, soulslikes</strong>, and creating <strong>digital art</strong>.
-          </p>
         </section>
 
-        <footer className='card-footer'>
-          <div className='social-links'>
-            <a href='https://github.com/dnnyzap' target="_blank" rel="noreferrer">
-              <FaGithub />
-            </a>
-            <a href='https://www.linkedin.com/in/damiaonunes' target='_blank' rel='noreferrer'>
-              <FaLinkedin />
-            </a>
-            <a href='mailto:damiao.barbosa.02@gmail.com'>
-              <FaEnvelope />
-            </a>
-            <a href='https://x.com/dnnyzap' target='_blank' rel='noreferrer'>
-              <FaXTwitter />
-            </a>
-          </div>
-          <a 
-          href={curriculoPdf}
-          download="curriculo_damiao.pdf" 
-          className='download-cv-button'>
-            <FaDownload />
-          </a>
-        </footer>
+        <section className="window-stack" aria-label="Profile details">
+          <Window title="MEET-DAMIAO" className="profile-window">
+            <button
+              type="button"
+              className="avatar-button"
+              onClick={() => setIsFaceMode(current => !current)}
+              title={isFaceMode ? 'Mostrar avatar' : 'Mostrar rosto'}
+            >
+              <img src={displayAvatar} alt="Damiao" className="profile-avatar" />
+              <span className={`discord-status-dot ${status}`} />
+            </button>
+            <div className="status-line">
+              <span className={`status-light ${status}`} />
+              Discord: {statusLabels[status] || status}
+            </div>
+          </Window>
+
+          <Window title="DISCORD-ACTIVITY" className="activity-window" id="activity" draggable>
+            <DiscordActivity data={lanyardData} />
+          </Window>
+
+          <Window title="SOCIALS" className="social-window" id="socials" draggable>
+            <div className="social-links">
+              {socials.map(social => (
+                <a
+                  key={social.label}
+                  href={social.href}
+                  target={social.href.startsWith('mailto:') ? undefined : '_blank'}
+                  rel="noreferrer"
+                >
+                  {social.icon}
+                  <span>{social.label}</span>
+                </a>
+              ))}
+            </div>
+          </Window>
+
+          <Window title="SKETCH" className="sketch-window">
+            <img src={drawingImg} alt="" />
+          </Window>
+        </section>
       </div>
-    </div>
+    </main>
   )
 }
 

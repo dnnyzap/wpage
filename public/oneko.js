@@ -185,7 +185,6 @@
 		}
 
 		if (forceSleep) {
-			avalibleIdleAnimations = ["sleeping"];
 			idleAnimation = "sleeping";
 		}
 
@@ -264,7 +263,7 @@
 			return;
 		}
 
-		direction = diffY / distance > 0.5 ? "N" : "";
+		let direction = diffY / distance > 0.5 ? "N" : "";
 		direction += diffY / distance < -0.5 ? "S" : "";
 		direction += diffX / distance > 0.5 ? "W" : "";
 		direction += diffX / distance < -0.5 ? "E" : "";
