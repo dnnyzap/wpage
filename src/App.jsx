@@ -18,7 +18,7 @@ const statusLabels = {
   offline: 'offline',
 }
 
-const skills = ['Java', 'Spring Boot', 'JavaScript', 'React', 'CSS', 'Git']
+const skills = ['Java', 'Spring Boot', 'JavaScript', 'React', 'TypeScript', 'Git', 'Node.js', 'ui/ux'  ]
 
 const socials = [
   { href: 'https://github.com/dnnyzap', label: 'GitHub', icon: <FaGithub /> },
