@@ -6,6 +6,7 @@ import faceImg from './assets/IMG_2948.png'
 import curriculoPdf from './assets/curriculo_damiao_nunes_21_07.pdf'
 import { FaCalendarAlt, FaClock, FaDownload, FaEnvelope, FaGithub, FaLinkedin } from 'react-icons/fa'
 import { FaXTwitter } from 'react-icons/fa6'
+import { ArrowDown, ArrowUpRight, GripHorizontal, RotateCcw } from 'lucide-react'
 
 const DISCORD_USER_ID = '330702585352683520'
 const MANAUS_TIME_ZONE = 'America/Manaus'
@@ -31,7 +32,7 @@ const Window = ({ title, children, className = '', draggable = false, id }) => {
   const [offset, setOffset] = useState({ x: 0, y: 0 })
 
   const handlePointerDown = (event) => {
-    if (!draggable || event.target.closest('button')) return
+    if (!draggable || event.button !== 0 || window.innerWidth <= 760 || event.target.closest('button')) return
 
     event.currentTarget.setPointerCapture(event.pointerId)
     dragStartRef.current = {
@@ -73,7 +74,7 @@ const Window = ({ title, children, className = '', draggable = false, id }) => {
         onPointerCancel={handlePointerUp}
       >
         <span>{title}</span>
-        <button type="button" aria-label={`Close ${title}`}>x</button>
+        {draggable && <div className="window-tools"><GripHorizontal size={16} aria-hidden="true" /><button type="button" onClick={() => setOffset({ x: 0, y: 0 })} title="Reset position" aria-label={`Reset ${title} position`}><RotateCcw size={14} /></button></div>}
       </div>
       <div className="window-body">
         {children}
@@ -143,7 +144,8 @@ const getDiscordAssetUrl = (activity, assetId) => {
   return `https://cdn.discordapp.com/app-assets/${activity.application_id}/${assetId}.png`
 }
 
-const DiscordActivity = ({ data }) => {
+const DiscordActivity = ({ data, unavailable }) => {
+  if (unavailable) return <p className="presence-empty">Discord is temporarily unavailable.</p>
   if (!data) {
     return <p className="presence-empty">Connecting to Discord...</p>
   }
@@ -191,24 +193,37 @@ const DiscordActivity = ({ data }) => {
 
 function App() {
   const [lanyardData, setLanyardData] = useState(null)
+  const [presenceUnavailable, setPresenceUnavailable] = useState(false)
   const [isFaceMode, setIsFaceMode] = useState(false)
 
   useEffect(() => {
+    const controller = new AbortController()
     const fetchPresence = () => {
-      fetch(`https://api.lanyard.rest/v1/users/${DISCORD_USER_ID}`)
-        .then(res => res.json())
+      fetch(`https://api.lanyard.rest/v1/users/${DISCORD_USER_ID}`, { signal: controller.signal })
+        .then(res => {
+          if (!res.ok) throw new Error('Presence unavailable')
+          return res.json()
+        })
         .then(response => {
           if (response.success) {
             setLanyardData(response.data)
+            setPresenceUnavailable(false)
+          } else {
+            setPresenceUnavailable(true)
           }
         })
-        .catch(error => console.error('Lanyard fetch error:', error))
+        .catch(error => {
+          if (error.name !== 'AbortError') setPresenceUnavailable(true)
+        })
     }
 
     fetchPresence()
 
     const interval = setInterval(fetchPresence, 3000)
-    return () => clearInterval(interval)
+    return () => {
+      clearInterval(interval)
+      controller.abort()
+    }
   }, [])
 
   const avatarUrl = useMemo(() => {
@@ -222,13 +237,13 @@ function App() {
     return `https://cdn.discordapp.com/avatars/${discordUser.id}/${discordUser.avatar}.${extension}?size=256`
   }, [lanyardData])
 
-  const status = lanyardData?.discord_status || 'offline'
+  const status = presenceUnavailable || !lanyardData ? 'unknown' : lanyardData.discord_status
   const displayAvatar = isFaceMode ? faceImg : avatarUrl
 
   return (
     <main className="desktop-shell">
       <nav className="taskbar" aria-label="Portfolio sections">
-        <button type="button" className="start-button">Start</button>
+        <a href="#" className="wordmark">DN<span> / </span></a>
         <a href="#about">about</a>
         <a href="#activity">activity</a>
         <a href="#socials">socials</a>
@@ -238,17 +253,23 @@ function App() {
         <LocalTime />
       </nav>
 
+      <section className="hero" aria-labelledby="hero-title">
+        <img className="hero-art" src={drawingImg} alt="" />
+        <div className="hero-content">
+          <p className="eyebrow">DEVELOPER & DIGITAL ART ENTHUSIAST</p>
+          <h1 id="hero-title">DAMIAO<br />NUNES<span className="hero-period">.</span></h1>
+          <p className="hero-description">Code, curiosity<br />& a little bit of chaos.</p>
+          <div className="hero-actions">
+            <a className="primary-action" href="https://github.com/dnnyzap" target="_blank" rel="noreferrer"><FaGithub /> Explore GitHub <ArrowUpRight size={16} /></a>
+            <a className="secondary-action" href={curriculoPdf} download="curriculo_damiao.pdf"><FaDownload /> Download CV</a>
+          </div>
+        </div>
+        <div className="hero-bottom"><span>MANAUS, BR</span><a href="#about">A LITTLE ABOUT ME <ArrowDown size={15} /></a><span>PERSONAL PORTFOLIO / 01</span></div>
+      </section>
       <div className="desktop-grid">
         <section className="intro-panel" id="about">
-          <p className="intro-kicker">portfolio.exe</p>
-          <h1>
-            about
-            <span>me!</span>
-          </h1>
-
-          <a className="signature" href="mailto:damiao.barbosa.02@gmail.com">
-            Damiao Nunes
-          </a>
+          <p className="eyebrow">01 / ABOUT</p>
+          <h2>Always<br />building.</h2>
 
           <p className="bio-copy">
             Student of <strong>Analysis and Systems Development</strong> based in Manaus.
@@ -265,12 +286,14 @@ function App() {
         </section>
 
         <section className="window-stack" aria-label="Profile details">
-          <Window title="MEET-DAMIAO" className="profile-window">
+          <Window title="DN / PROFILE" className="profile-window">
             <button
               type="button"
               className="avatar-button"
               onClick={() => setIsFaceMode(current => !current)}
               title={isFaceMode ? 'Mostrar avatar' : 'Mostrar rosto'}
+              aria-label={isFaceMode ? 'Mostrar avatar' : 'Mostrar rosto'}
+              aria-pressed={isFaceMode}
             >
               <img src={displayAvatar} alt="Damiao" className="profile-avatar" />
               <span className={`discord-status-dot ${status}`} />
@@ -282,7 +305,7 @@ function App() {
           </Window>
 
           <Window title="DISCORD-ACTIVITY" className="activity-window" id="activity" draggable>
-            <DiscordActivity data={lanyardData} />
+            <DiscordActivity data={lanyardData} unavailable={presenceUnavailable} />
           </Window>
 
           <Window title="SOCIALS" className="social-window" id="socials" draggable>
@@ -301,11 +324,9 @@ function App() {
             </div>
           </Window>
 
-          <Window title="SKETCH" className="sketch-window">
-            <img src={drawingImg} alt="" />
-          </Window>
         </section>
       </div>
+      <footer className="site-footer"><a href="mailto:damiao.barbosa.02@gmail.com">LET'S TALK <ArrowUpRight size={24} /></a><span>DAMIAO NUNES / {new Date().getFullYear()}</span><LocalTime /></footer>
     </main>
   )
 }
