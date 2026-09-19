@@ -4,7 +4,7 @@ import defaultHeroImg from './assets/icon.jpg'
 import drawingImg from './assets/drawingms.png'
 import faceImg from './assets/IMG_2948.png'
 import curriculoPdf from './assets/curriculo_damiao_nunes_21_07.pdf'
-import { FaCalendarAlt, FaClock, FaDownload, FaEnvelope, FaGithub, FaLinkedin } from 'react-icons/fa'
+import { FaCalendarAlt, FaClock, FaDownload, FaEnvelope, FaGithub, FaInstagram, FaLinkedin } from 'react-icons/fa'
 import { FaXTwitter } from 'react-icons/fa6'
 import { ArrowDown, ArrowUpRight, GripHorizontal, RotateCcw } from 'lucide-react'
 
@@ -25,6 +25,7 @@ const socials = [
   { href: 'https://www.linkedin.com/in/damiaonunes', label: 'LinkedIn', icon: <FaLinkedin /> },
   { href: 'mailto:damiao.barbosa.02@gmail.com', label: 'Email', icon: <FaEnvelope /> },
   { href: 'https://x.com/dnnyzap', label: 'X', icon: <FaXTwitter /> },
+  { href: 'https://instagram.com/sobrecairdebike', label: 'Instagram', icon: <FaInstagram /> },
 ]
 
 const Window = ({ title, children, className = '', draggable = false, id }) => {
